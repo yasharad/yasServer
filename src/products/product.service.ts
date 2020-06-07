@@ -19,11 +19,28 @@ export class ProductService {
     }
 
     getSingleProduct(prdouctId: string):any {
-        const p = this.products.find((product)=> product.id === prdouctId );
-        if (!p) {
-            throw new NotFoundException('kire khar')
-        }
-        return {...p};
+
+         return this.findProduct(prdouctId)[0];
 
     }
+
+    private findProduct(prdouctId: string): [Product, number] {
+        const index = this.products.findIndex((product)=> product.id === prdouctId );
+        const  p =  this.products[index];
+        if (!p) {
+            throw new NotFoundException('kire khar');
+        }
+        return [p, index];
+    }
+
+    updateProduct(proId: string, title: string, desc: string, price: number): any {
+        const [prod, index] =  this.findProduct(proId);
+        const updatedProduct = {...prod};
+        updatedProduct.title =  title;
+        updatedProduct.price =  price;
+        updatedProduct.description =  desc;
+        this.products[index] = updatedProduct;
+        return updatedProduct;
+    }
+
 }
